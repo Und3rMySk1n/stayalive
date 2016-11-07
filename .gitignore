@@ -1,0 +1,7 @@
+/debug
+/ipch
+/stayalive/debug
+/lib/debug
+/.vs
+
+*.sdf

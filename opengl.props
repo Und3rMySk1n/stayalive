@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <IncludePath>C:\Program Files (x86)\Windows Kits\8.1\Include\um;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(glew)\include\;$(BOOST)\;$(glm)\;$(SDL2)\include\</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>$(BOOST)\stage\lib\;$(glew)\lib\Release\Win32\;$(tinyxml)\;$(SDL2)\lib\x86\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <SubSystem>Console</SubSystem>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;glew32.lib;OpenGL32.lib;glu32.lib;tinyxml2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <PostBuildEvent>
+      <Command>copy /Y "C:\IPS\Visual Studio Libs\glew-2.0.0\bin\Release\Win32\glew32.dll" "$(TargetDir)";
+copy /Y "C:\IPS\Visual Studio Libs\SDL2\lib\x86\SDL2.dll" "$(TargetDir)"
+copy /Y "C:\IPS\Visual Studio Libs\tinyxml2\tinyxml2.dll" "$(TargetDir)"
+copy /Y "C:\IPS\Visual Studio Libs\SDL2\lib\x86\SDL2_image.dll" "$(TargetDir)"
+copy /Y "C:\IPS\Visual Studio Libs\SDL2\lib\x86\SDL2_ttf.dll" "$(TargetDir)"
+copy /Y "C:\IPS\Visual Studio Libs\SDL2\lib\x86\libfreetype-6.dll" "$(TargetDir)"
+copy /Y "C:\IPS\Visual Studio Libs\SDL2\lib\x86\zlib1.dll" "$(TargetDir)"
+copy /Y "C:\IPS\Visual Studio Libs\SDL2\lib\x86\libjpeg-9.dll" "$(TargetDir)"
+copy /Y "C:\IPS\Visual Studio Libs\SDL2\lib\x86\libpng16-16.dll" "$(TargetDir)"
+copy /Y "C:\IPS\Visual Studio Libs\SDL2\lib\x86\libtiff-5.dll" "$(TargetDir)"
+copy /Y "C:\IPS\Visual Studio Libs\SDL2\lib\x86\libwebp-4.dll" "$(TargetDir)"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup />
+</Project>
