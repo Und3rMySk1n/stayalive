@@ -1,30 +1,9 @@
 #include "stdafx.h"
 #include "MeshP3NT2.h"
+#include "IRenderer3D.h"
 
 namespace
 {
-/// Привязывает вершины к состоянию OpenGL,
-/// затем вызывает 'callback'.
-template <class T>
-void DoWithBindedArrays(const std::vector<SVertexP3NT2> &vertices, T && callback)
-{
-    // Включаем режим vertex array и normal array.
-    glEnableClientState(GL_VERTEX_ARRAY);
-    glEnableClientState(GL_NORMAL_ARRAY);
-
-    // Выполняем привязку vertex array и normal array
-    const size_t stride = sizeof(SVertexP3NT2);
-    glNormalPointer(GL_FLOAT, stride, glm::value_ptr(vertices[0].normal));
-    glVertexPointer(3, GL_FLOAT, stride, glm::value_ptr(vertices[0].position));
-
-    // Выполняем внешнюю функцию.
-    callback();
-
-    // Выключаем режим vertex array и normal array.
-    glDisableClientState(GL_VERTEX_ARRAY);
-    glDisableClientState(GL_NORMAL_ARRAY);
-}
-
 GLenum GetPrimitiveType(MeshType type)
 {
     switch (type)
@@ -41,18 +20,42 @@ GLenum GetPrimitiveType(MeshType type)
 }
 }
 
-void SMeshP3NT2::Clear(MeshType meshType)
+CMeshP3NT2::CMeshP3NT2(MeshType meshType)
+    : m_meshType(meshType)
+    , m_attributesBuffer(BufferType::Attributes)
+    , m_indexesBuffer(BufferType::Indicies)
 {
-    m_meshType = meshType;
-    m_indicies.clear();
-    m_vertices.clear();
 }
 
-void SMeshP3NT2::Draw() const
+void CMeshP3NT2::Copy(const SMeshDataP3NT2 &data)
 {
-    DoWithBindedArrays(m_vertices, [this] {
-        GLenum primitive = GetPrimitiveType(m_meshType);
-        glDrawElements(primitive, GLsizei(m_indicies.size()),
-                       GL_UNSIGNED_INT, m_indicies.data());
-    });
+    m_indiciesCount = data.indicies.size();
+    m_indexesBuffer.Copy(data.indicies);
+    m_verticiesCount = data.vertices.size();
+    m_attributesBuffer.Copy(data.vertices);
+}
+
+void CMeshP3NT2::Draw(IRenderer3D &renderer) const
+{
+    // Выполняем привязку vertex array, normal array, tex coord 2d array
+    const size_t stride = sizeof(SVertexP3NT2);
+    const size_t positionOffset = size_t(offsetof(SVertexP3NT2, position));
+    const size_t normalOffset = size_t(offsetof(SVertexP3NT2, normal));
+    const size_t texCoordOffset = size_t(offsetof(SVertexP3NT2, texCoord));
+
+    m_attributesBuffer.Bind();
+    m_indexesBuffer.Bind();
+
+    renderer.SetPosition3DOffset(positionOffset, stride);
+    renderer.SetNormalOffset(normalOffset, stride);
+    renderer.SetTexCoord2DOffset(texCoordOffset, stride);
+
+    const GLenum primitive = GetPrimitiveType(m_meshType);
+    const GLvoid *indexOffset = reinterpret_cast<const GLvoid *>(0);
+    const GLuint minIndex = 0;
+    const GLuint maxIndex = GLuint(m_verticiesCount);
+    const GLsizei size = GLsizei(m_indiciesCount);
+
+    glDrawRangeElements(primitive, minIndex, maxIndex, size,
+                   GL_UNSIGNED_INT, indexOffset);
 }

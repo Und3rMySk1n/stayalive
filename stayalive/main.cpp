@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "Window.h"
+#include "WindowClient.h"
 #include <SDL2/SDL.h>
 
 namespace
@@ -13,14 +13,16 @@ int main(int, char *[])
 {
 	try
 	{
-		CWindow window;
+		CWindow window(ContextProfile::RobustOpenGL_3_2, ContextMode::Debug);
 		window.Show(WINDOW_TITLE, WINDOW_SIZE);
-		window.DoGameLoop();
+		CWindowClient client(window);
+		window.DoMainLoop();
 	}
 	catch (const std::exception &ex)
 	{
-		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, ERROR_TITLE,
-			ex.what(), nullptr);
+		const char *title = "Fatal Error";
+		const char *message = ex.what();
+		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, title, message, nullptr);
 	}
 
     return 0;

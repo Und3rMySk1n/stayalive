@@ -10,8 +10,8 @@ const float LINEAR_MOVE_SPEED = 5.f;
 const float MIN_DISTANCE = 1.5f;
 const float MAX_DISTANCE = 30.f;
 
-const float MOVE_SPEED = 0.05;
-const float VIEW_SPEED = 1.f;
+const float MOVE_SPEED = 0.1f;
+const float VIEW_SPEED = 2.f;
 const float MOUSE_SENSITIVITY = 10.f;
 
 bool ShouldTrackKeyPressed(const SDL_Keysym &key)
@@ -103,15 +103,18 @@ CCamera::CCamera(float rotationRadians, float distance)
 
 void CCamera::Update(float deltaSec, const glm::ivec2 &windowSize)
 {
-	m_posX += GetXOffset(m_keysPressed, m_angleX);
-	m_posZ += GetZOffset(m_keysPressed, m_angleX);
-
 	GetCursorPos(&m_mousexy);
 	m_angleX += (windowSize.x / 2.f - m_mousexy.x) / MOUSE_SENSITIVITY;
 	m_angleY += (windowSize.y / 2.f - m_mousexy.y) / MOUSE_SENSITIVITY;
 	if (m_angleY < -89.0) { m_angleY = -89.0; }
 	if (m_angleY > 89.0) { m_angleY = 89.0; }
-	SetCursorPos(windowSize.x / 2.f, windowSize.y / 2.f);
+	SetCursorPos((int)windowSize.x / 2, (int)windowSize.y / 2);
+}
+
+void CCamera::Move(float deltaSec, glm::vec2 newPosition)
+{
+	m_posX = newPosition.x;
+	m_posZ = newPosition.y;
 }
 
 bool CCamera::OnKeyDown(const SDL_KeyboardEvent &event)
@@ -140,6 +143,12 @@ void CCamera::SetDirection(const glm::vec3 &direction)
     m_direction = glm::normalize(direction);
 }
 
+void CCamera::SetPosition(const glm::vec2 &direction)
+{
+	m_posX = direction.x;
+	m_posZ = direction.y;
+}
+
 glm::mat4 CCamera::GetViewTransform() const
 {
     // Поворачиваем вектор направления камеры вокруг оси Y.
@@ -147,9 +156,9 @@ glm::mat4 CCamera::GetViewTransform() const
     //glm::vec3 direction = glm::rotateY(m_direction, m_rotationRadians);
 
 	const glm::vec3 direction = { 
-		m_posX - sin(m_angleX / 180 * M_PI), 
-		m_height + (tan(m_angleY / 180 * M_PI)), 
-		m_posZ - cosf(m_angleX / 180 * M_PI) };
+		m_posX - sin(m_angleX / 180.f * (float)M_PI),
+		m_height + (tan(m_angleY / 180.f * (float)M_PI)),
+		m_posZ - cosf(m_angleX / 180.f * (float)M_PI) };
 
 	const glm::vec3 eye = {m_posX, m_height, m_posZ};
     //const glm::vec3 center = {0, 0, 0};
@@ -159,4 +168,23 @@ glm::mat4 CCamera::GetViewTransform() const
     // Она даёт матрицу, действующую так, как будто камера смотрит
     // с позиции eye на точку center, а направление "вверх" камеры равно up.
     return glm::lookAt(eye, direction, up);
+}
+
+// actor functions
+glm::vec2 CCamera::GetPositionOnMap()
+{
+	glm::vec2 position;
+	position.x = m_posX;
+	position.y = m_posZ;
+
+	return position;
+}
+
+glm::vec2 CCamera::GetNewPositionOnMap()
+{
+	glm::vec2 position;
+	position.x = m_posX + GetXOffset(m_keysPressed, m_angleX);
+	position.y =  m_posZ + GetZOffset(m_keysPressed, m_angleX);
+
+	return position;
 }

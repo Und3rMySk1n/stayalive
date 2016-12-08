@@ -12,10 +12,16 @@ public:
     explicit CCamera(float rotationRadians, float distance);
 
     void Update(float deltaSec, const glm::ivec2 &windowSize);
+	void Move(float deltaSec, glm::vec2 newPosition);
     bool OnKeyDown(const SDL_KeyboardEvent &event);
     bool OnKeyUp(const SDL_KeyboardEvent &event);
 
     void SetDirection(const glm::vec3 &direction);
+	void SetPosition(const glm::vec2 &direction);
+
+	// actor functions
+	glm::vec2 GetPositionOnMap();
+	glm::vec2 GetNewPositionOnMap();
 
     glm::mat4 GetViewTransform() const;
 

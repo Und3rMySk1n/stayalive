@@ -12,7 +12,7 @@
     <Link>
       <AdditionalLibraryDirectories>$(BOOST)\stage\lib\;$(glew)\lib\Release\Win32\;$(tinyxml)\;$(SDL2)\lib\x86\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <SubSystem>Console</SubSystem>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;glew32.lib;OpenGL32.lib;glu32.lib;tinyxml2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;glew32.lib;OpenGL32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy /Y "C:\IPS\Visual Studio Libs\glew-2.0.0\bin\Release\Win32\glew32.dll" "$(TargetDir)";
