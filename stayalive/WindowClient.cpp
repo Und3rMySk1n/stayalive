@@ -12,6 +12,9 @@ const float CAMERA_INITIAL_ROTATION = 0.f;
 const float CAMERA_INITIAL_DISTANCE = 3;
 const int SPHERE_PRECISION = 40;
 
+const int PLAYER_ID = 2;
+const int KEY_ID = 3;
+
 const unsigned TILE_SIZE = 2;
 const unsigned LABYRINTH_WIDTH = 6;
 const unsigned LABYRINTH_LENGTH = 10;
@@ -32,28 +35,36 @@ void SetupOpenGLState()
 }
 
 CWindowClient::CWindowClient(CWindow &window)
-    : CAbstractWindowClient(window)
-    , m_defaultVAO(CArrayObject::do_bind_tag())
-    , m_camera(CAMERA_INITIAL_ROTATION, CAMERA_INITIAL_DISTANCE)
-    , m_sunlight(GL_LIGHT0)
+	: CAbstractWindowClient(window)
+	, m_defaultVAO(CArrayObject::do_bind_tag())
+	, m_camera(CAMERA_INITIAL_ROTATION, CAMERA_INITIAL_DISTANCE)
+	, m_lamp(GL_LIGHT0)
 	, m_labyrinth(labyrinthWidth, labyrinthLength, LABYRINTH_HEIGHT, TILE_SIZE)
 {
     const glm::vec3 SUNLIGHT_DIRECTION = {1.f, 1.f, 1.f};
-    const glm::vec4 WHITE_RGBA = {1, 1, 1, 1};
-    const glm::vec4 BLACK_RGBA = {0, 0, 0, 1};
+	const glm::vec4 WHITE_RGBA = { 1, 1, 1, 1 };
+    const glm::vec4 LIGHT_BROWN_RGBA = {0.746f, 0.7f, 0.68f, 1};
+    const glm::vec4 BLACK_RGBA = {0.01f, 0.02f, 0.03f, 1};
 
     window.SetBackgroundColor(BLACK_RGBA);
-    SetupOpenGLState();
-
-    m_sunlight.SetDirection(SUNLIGHT_DIRECTION);
-    m_sunlight.SetDiffuse(WHITE_RGBA);
-    m_sunlight.SetSpecular(WHITE_RGBA);
+    SetupOpenGLState();	
 		
 	std::vector<std::vector<int>> blocksArray = labirynthReader->GetBlocks(labyrinthWidth, labyrinthLength);
 	delete labirynthReader;
 
 	m_labyrinth.AddWalls(blocksArray);
-	m_camera.SetPosition(m_labyrinth.GetPlayerPosition(blocksArray));
+	m_labyrinth.AddKey(m_labyrinth.GetObjectPosition(blocksArray, KEY_ID));
+
+	glm::vec2 playerPosition = m_labyrinth.GetObjectPosition(blocksArray, PLAYER_ID);
+	m_camera.SetPosition(playerPosition);
+
+	m_lamp.SetPosition({ playerPosition.x, 1.f, playerPosition.y });
+	m_lamp.SetDiffuse(LIGHT_BROWN_RGBA);
+	m_lamp.SetSpecular(LIGHT_BROWN_RGBA);
+
+	m_lamp.SetSpotDirection({ playerPosition.x, 0.f, playerPosition.y });
+	m_lamp.SetSpotExponent(200);
+	m_lamp.SetSpotCutoff(40);
 
 	ShowCursor(false);
 }
@@ -65,8 +76,8 @@ void CWindowClient::OnUpdateWindow(float deltaSeconds)
 	glm::vec2 newPos = m_camera.GetNewPositionOnMap();
 	glm::vec2 resultPos = m_labyrinth.CorrectActorMovement(pos, newPos, 0.2f);
 
-	m_camera.Move(deltaSeconds, resultPos);
-	m_camera.Update(deltaSeconds, GetWindow().GetWindowSize());	 
+	m_camera.Move(deltaSeconds, resultPos);	
+	m_camera.Update(deltaSeconds, GetWindow().GetWindowSize());
 }
 
 void CWindowClient::OnDrawWindow()
@@ -120,8 +131,9 @@ void CWindowClient::SetupView(const glm::ivec2 &size)
 void CWindowClient::SetupLight0()
 {
     CStayAliveProgramContext::SLightSource light0;
-    light0.specular = m_sunlight.GetSpecular();
-    light0.diffuse = m_sunlight.GetDiffuse();
-    light0.position = m_sunlight.GetUniformPosition();
+    light0.specular = m_lamp.GetSpecular();
+    light0.diffuse = m_lamp.GetDiffuse();
+    light0.position = m_lamp.GetUniformPosition();
+
     m_programContext.SetLight0(light0);
 }

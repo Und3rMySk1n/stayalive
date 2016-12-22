@@ -119,6 +119,51 @@ void CPositionLightSource::Setup() const
     glLightfv(GetIndex(), GL_POSITION, glm::value_ptr(GetUniformPosition()));
 }
 
+
+
+CSpotlight::CSpotlight(unsigned index)
+	: CPositionLightSource(index)
+{
+	SetUniformPosition({ 0, 0, 0, 1 });
+}
+
+void CSpotlight::Setup() const
+{
+	SetupImpl();
+	glLightfv(GetIndex(), GL_POSITION, glm::value_ptr(GetUniformPosition()));
+	glLightfv(GetIndex(), GL_SPOT_DIRECTION, glm::value_ptr(m_spotDirection));
+	glLightf(GetIndex(), GL_SPOT_EXPONENT, m_spotExponent);
+	glLightf(GetIndex(), GL_SPOT_CUTOFF, m_spotCutoff);
+}
+
+GLfloat CSpotlight::GetSpotCutoff()
+{
+	return float(cos(m_spotCutoff * 3.1415f / 180.0f));
+}
+
+glm::vec3 CSpotlight::GetSpotDirection()
+{
+	return m_spotDirection;
+}
+
+
+void CSpotlight::SetSpotDirection(const glm::vec3 &value)
+{
+	m_spotDirection = value;
+}
+
+void CSpotlight::SetSpotExponent(float value)
+{
+	m_spotExponent = value;
+}
+
+void CSpotlight::SetSpotCutoff(float value)
+{
+	m_spotCutoff = value;
+}
+
+
+
 void CPhongModelMaterial::Setup() const
 {
     glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, glm::value_ptr(m_emission));

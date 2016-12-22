@@ -75,6 +75,26 @@ public:
     void Setup() const override;
 };
 
+class CSpotlight : public CPositionLightSource
+{
+public:
+	/// @param index - один из GL_LIGHT*
+	CSpotlight(unsigned index);
+
+	glm::vec3 GetSpotDirection();
+	GLfloat GetSpotCutoff();
+
+	void SetSpotDirection(const glm::vec3 &value);
+	void SetSpotExponent(float value);
+	void SetSpotCutoff(float value);
+
+	void Setup() const override;
+private:
+	glm::vec3 m_spotDirection;
+	GLfloat m_spotExponent;
+	GLfloat m_spotCutoff;
+};
+
 class CPhongModelMaterial
 {
 public:

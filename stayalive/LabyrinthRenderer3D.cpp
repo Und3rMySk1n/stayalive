@@ -36,3 +36,8 @@ void CLabyrinthRenderer3D::SetNormalOffset(size_t offset, size_t stride)
 {
 	m_normalAttr.SetVec3Offset(offset, stride, false);
 }
+
+void CLabyrinthRenderer3D::SetColormapSlot(const int slotNumber)
+{
+	m_context.SetColormapSlot(slotNumber);
+}

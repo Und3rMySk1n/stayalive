@@ -9,6 +9,10 @@ public:
 		glm::vec4 position;
 		glm::vec4 diffuse;
 		glm::vec4 specular;
+
+		glm::vec3 direction;
+		float cutoff;
+		float exponent;
 	};
 
 	CStayAliveProgramContext();
@@ -27,6 +31,7 @@ public:
 	void SetView(const glm::mat4 &value);
 	void SetProjection(const glm::mat4 &value);
 	void SetLight0(const SLightSource &source);
+	void SetColormapSlot(const int slotNumber);
 
 private:
 	glm::mat4 m_model;
@@ -36,6 +41,7 @@ private:
 	SLightSource m_light0;
 
 	CTexture2DUniquePtr m_pGroundTexture;
-	CTexture2DUniquePtr m_pGroundNormal;
+	CTexture2DUniquePtr m_pWallTexture;
+	CTexture2DUniquePtr m_pCeilingTexture;
 	CShaderProgram m_programStayAlive;
 };

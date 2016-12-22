@@ -15,6 +15,8 @@ public:
 	void SetPosition3DOffset(size_t offset, size_t stride) override;
 	void SetNormalOffset(size_t offset, size_t stride) override;
 
+	void SetColormapSlot(const int slotNumber) override;
+
 private:
 	CStayAliveProgramContext &m_context;
 	CVertexAttribute m_vertexAttr;

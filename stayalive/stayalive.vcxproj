@@ -153,7 +153,9 @@
     <ClInclude Include="FlatSurface.h" />
     <ClInclude Include="FunctionSurface.h" />
     <ClInclude Include="IRenderer3D.h" />
+    <ClInclude Include="Key.h" />
     <ClInclude Include="Labyrinth.h" />
+    <ClInclude Include="LabyrinthObject.h" />
     <ClInclude Include="LabyrinthReader.h" />
     <ClInclude Include="LabyrinthRenderer3D.h" />
     <ClInclude Include="MeshP3NT2.h" />
@@ -168,7 +170,9 @@
     <ClCompile Include="Decorators.cpp" />
     <ClCompile Include="FlatSurface.cpp" />
     <ClCompile Include="FunctionSurface.cpp" />
+    <ClCompile Include="Key.cpp" />
     <ClCompile Include="Labyrinth.cpp" />
+    <ClCompile Include="LabyrinthObject.cpp" />
     <ClCompile Include="LabyrinthReader.cpp" />
     <ClCompile Include="LabyrinthRenderer3D.cpp" />
     <ClCompile Include="main.cpp" />

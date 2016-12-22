@@ -14,10 +14,11 @@ CStayAliveProgramContext::CStayAliveProgramContext()
 	CTexture2DLoader loader;
 
 	m_pGroundTexture = loader.Load("res/img/ground.jpg");
-	m_pGroundNormal = loader.Load("res/img/NormalMap.png");
+	m_pWallTexture = loader.Load("res/img/wall.jpg");
+	m_pCeilingTexture = loader.Load("res/img/ceiling.jpg");
 
-	const auto vertShader = CFilesystemUtils::LoadFileAsString("res/cloud_earth_robust.vert");
-	const auto fragShader = CFilesystemUtils::LoadFileAsString("res/cloud_earth_robust.frag");
+	const auto vertShader = CFilesystemUtils::LoadFileAsString("res/labyrinth.vert");
+	const auto fragShader = CFilesystemUtils::LoadFileAsString("res/labyrinth.frag");
 	m_programStayAlive.CompileShader(vertShader, ShaderType::Vertex);
 	m_programStayAlive.CompileShader(fragShader, ShaderType::Fragment);
 	m_programStayAlive.Link();
@@ -33,13 +34,14 @@ void CStayAliveProgramContext::Use()
 	//m_pCloudTexture->Bind();
 	// переключаемся обратно на текстурный слот #0
 	// перед началом рендеринга активным будет именно этот слот.
-	glActiveTexture(GL_TEXTURE1);
-	m_pGroundNormal->Bind();
+	glActiveTexture(GL_TEXTURE3);
+	m_pCeilingTexture->Bind();
+	glActiveTexture(GL_TEXTURE2);
+	m_pWallTexture->Bind();
 	glActiveTexture(GL_TEXTURE0);
 	m_pGroundTexture->Bind();
 
 	m_programStayAlive.Use();
-	m_programStayAlive.FindUniform("normalmap") = 1; // GL_TEXTURE1
 	m_programStayAlive.FindUniform("colormap") = 0; // GL_TEXTURE0
 
 	const glm::mat4 mv = m_view * m_model;
@@ -106,4 +108,9 @@ void CStayAliveProgramContext::SetProjection(const glm::mat4 &value)
 void CStayAliveProgramContext::SetLight0(const CStayAliveProgramContext::SLightSource &source)
 {
 	m_light0 = source;
+}
+
+void CStayAliveProgramContext::SetColormapSlot(const int slotNumber)
+{
+	m_programStayAlive.FindUniform("colormap") = slotNumber;
 }

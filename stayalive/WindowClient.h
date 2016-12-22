@@ -32,7 +32,7 @@ private:
 
     //CIdentitySphere m_sphereObj;
     CCamera m_camera;
-    CDirectedLightSource m_sunlight;
+	CSpotlight m_lamp;
 	CStayAliveProgramContext m_programContext;
 	Labyrinth m_labyrinth;
 };

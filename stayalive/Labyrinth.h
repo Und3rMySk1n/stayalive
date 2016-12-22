@@ -1,6 +1,8 @@
 #pragma once
 #include "FlatSurface.h"
 #include "SolidBlock.h"
+#include "LabyrinthObject.h"
+#include "Key.h"
 
 typedef std::vector<std::vector<int>> BlockArrayType;
 typedef std::vector<std::vector<glm::vec2>> WallPointsArrayType;
@@ -12,7 +14,8 @@ public:
 
 	void Draw(IRenderer3D &renderer) const;
 	void AddWalls(BlockArrayType wallPointsArray);
-	glm::vec2 GetPlayerPosition(BlockArrayType wallPointsArray);
+	void AddKey(glm::vec2 position);
+	glm::vec2 GetObjectPosition(BlockArrayType wallPointsArray, int objectId);
 	glm::vec2 CorrectActorMovement(glm::vec2 point, glm::vec2 newPoint, float offset);
 
 	~Labyrinth();
@@ -29,5 +32,6 @@ private:
 	CMeshP3NT2 m_wallsMesh;
 
 	std::vector<std::unique_ptr<SolidBlock>> m_blocks;
+	std::vector<std::unique_ptr<CLabyrinthObject>> m_objects;
 };
 

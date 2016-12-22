@@ -87,7 +87,6 @@ WallPointsArrayType Labyrinth::GetWallsFromBlocksArray(BlockArrayType blocksArra
 				m_blocks.push_back(std::move(block));
 			}
 		}
-		std::cout << std::endl;
 	}
 
 	return wallPointsArray;
@@ -106,7 +105,13 @@ void Labyrinth::AddWalls(BlockArrayType blocksArray)
 	m_wallsMesh.Copy(wallTesselator);
 }
 
-glm::vec2 Labyrinth::GetPlayerPosition(BlockArrayType blocksArray)
+void Labyrinth::AddKey(glm::vec2 position)
+{
+	std::unique_ptr<CKey> key(new CKey(position));
+	m_objects.push_back(std::move(key));
+}
+
+glm::vec2 Labyrinth::GetObjectPosition(BlockArrayType blocksArray, int objectId)
 {
 	glm::vec2 playerPosition;
 
@@ -114,7 +119,7 @@ glm::vec2 Labyrinth::GetPlayerPosition(BlockArrayType blocksArray)
 	{
 		for (unsigned lengthNum = 0; lengthNum < m_stacks; lengthNum++)
 		{
-			if (blocksArray[widthNum][lengthNum] == 2)
+			if (blocksArray[widthNum][lengthNum] == objectId)
 			{
 				playerPosition.x = (float)(widthNum * m_tileSize) + (m_tileSize / 2.f);
 				playerPosition.y = (float)(lengthNum * m_tileSize) + (m_tileSize / 2.f);
@@ -184,10 +189,16 @@ glm::vec2 Labyrinth::CorrectActorMovement(glm::vec2 point, glm::vec2 newPoint, f
 
 void Labyrinth::Draw(IRenderer3D &renderer) const
 {
-	m_floor.Draw(renderer);
-	//m_roof.Draw(renderer);
-
+	m_floor.Draw(renderer);	
+	
+	renderer.SetColormapSlot(2);
+	m_roof.Draw(renderer);
 	for (auto it = m_blocks.begin(); it != m_blocks.end(); it++)
+	{
+		(*it)->Draw(renderer);
+	}
+
+	for (auto it = m_objects.begin(); it != m_objects.end(); it++)
 	{
 		(*it)->Draw(renderer);
 	}
