@@ -15,7 +15,7 @@ CStayAliveProgramContext::CStayAliveProgramContext()
 
 	m_pGroundTexture = loader.Load("res/img/ground.jpg");
 	m_pWallTexture = loader.Load("res/img/wall.jpg");
-	m_pCeilingTexture = loader.Load("res/img/ceiling.jpg");
+	m_pGoldTexture = loader.Load("res/img/gold.jpg");
 
 	const auto vertShader = CFilesystemUtils::LoadFileAsString("res/labyrinth.vert");
 	const auto fragShader = CFilesystemUtils::LoadFileAsString("res/labyrinth.frag");
@@ -35,7 +35,7 @@ void CStayAliveProgramContext::Use()
 	// переключаемся обратно на текстурный слот #0
 	// перед началом рендеринга активным будет именно этот слот.
 	glActiveTexture(GL_TEXTURE3);
-	m_pCeilingTexture->Bind();
+	m_pGoldTexture->Bind();
 	glActiveTexture(GL_TEXTURE2);
 	m_pWallTexture->Bind();
 	glActiveTexture(GL_TEXTURE0);
@@ -53,6 +53,8 @@ void CStayAliveProgramContext::Use()
 	m_programStayAlive.FindUniform("light0.position") = m_light0.position;
 	m_programStayAlive.FindUniform("light0.diffuse") = m_light0.diffuse;
 	m_programStayAlive.FindUniform("light0.specular") = m_light0.specular;
+	m_programStayAlive.FindUniform("light0.direction") = m_light0.direction;
+	m_programStayAlive.FindUniform("light0.cutoff") = m_light0.cutoff;
 }
 
 CVertexAttribute CStayAliveProgramContext::GetPositionAttr() const

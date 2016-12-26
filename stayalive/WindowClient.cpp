@@ -19,6 +19,7 @@ const unsigned TILE_SIZE = 2;
 const unsigned LABYRINTH_WIDTH = 6;
 const unsigned LABYRINTH_LENGTH = 10;
 const float LABYRINTH_HEIGHT = 3.f;
+const float WALL_OFFSET = 0.2f;
 
 CLabyrinthReader *labirynthReader = new CLabyrinthReader("res/map.tmx");
 const unsigned labyrinthWidth = labirynthReader->GetWidth();
@@ -53,18 +54,18 @@ CWindowClient::CWindowClient(CWindow &window)
 	delete labirynthReader;
 
 	m_labyrinth.AddWalls(blocksArray);
-	m_labyrinth.AddKey(m_labyrinth.GetObjectPosition(blocksArray, KEY_ID));
+
+	glm::vec2 keyPosition = m_labyrinth.GetObjectPosition(blocksArray, KEY_ID);
+	m_key.SetPosition(keyPosition);
 
 	glm::vec2 playerPosition = m_labyrinth.GetObjectPosition(blocksArray, PLAYER_ID);
 	m_camera.SetPosition(playerPosition);
 
-	m_lamp.SetPosition({ playerPosition.x, 1.f, playerPosition.y });
 	m_lamp.SetDiffuse(LIGHT_BROWN_RGBA);
 	m_lamp.SetSpecular(LIGHT_BROWN_RGBA);
-
-	m_lamp.SetSpotDirection({ playerPosition.x, 0.f, playerPosition.y });
-	m_lamp.SetSpotExponent(200);
-	m_lamp.SetSpotCutoff(40);
+	m_lamp.SetPosition({ playerPosition.x, 1.0f, playerPosition.y });
+	m_lamp.SetSpotDirection({-1.0f, -1.0f, 0.0f});
+	m_lamp.SetSpotCutoff(30);
 
 	ShowCursor(false);
 }
@@ -74,10 +75,21 @@ void CWindowClient::OnUpdateWindow(float deltaSeconds)
     //UpdateRotation(deltaSeconds);
 	glm::vec2 pos = m_camera.GetPositionOnMap();
 	glm::vec2 newPos = m_camera.GetNewPositionOnMap();
-	glm::vec2 resultPos = m_labyrinth.CorrectActorMovement(pos, newPos, 0.2f);
+	glm::vec2 resultPos = m_labyrinth.CorrectActorMovement(pos, newPos, WALL_OFFSET);
 
-	m_camera.Move(deltaSeconds, resultPos);	
+	m_camera.Move(deltaSeconds, resultPos);
 	m_camera.Update(deltaSeconds, GetWindow().GetWindowSize());
+
+	if (m_key.Reached(resultPos))
+	{		
+		if (!m_player.HasKey())
+		{
+			m_player.PickUpKey();
+			std::cout << "Picked up the key!" << std::endl;
+		}		
+	}
+
+	m_camera.SetPosition(resultPos);
 }
 
 void CWindowClient::OnDrawWindow()
@@ -87,6 +99,11 @@ void CWindowClient::OnDrawWindow()
 
 	CLabyrinthRenderer3D renderer(m_programContext);
 	m_labyrinth.Draw(renderer);
+
+	if (!m_player.HasKey())
+	{
+		m_key.Draw(renderer);
+	}	
 }
 
 void CWindowClient::OnKeyDown(const SDL_KeyboardEvent &event)
@@ -134,6 +151,9 @@ void CWindowClient::SetupLight0()
     light0.specular = m_lamp.GetSpecular();
     light0.diffuse = m_lamp.GetDiffuse();
     light0.position = m_lamp.GetUniformPosition();
+
+	light0.direction = m_lamp.GetSpotDirection();
+	light0.cutoff = m_lamp.GetSpotCutoff();
 
     m_programContext.SetLight0(light0);
 }

@@ -6,6 +6,8 @@
 #include "MeshP3NT2.h"
 #include "Labyrinth.h"
 #include "SolidBlock.h"
+#include "Player.h"
+#include "Key.h"
 
 class CWindowClient
         : public CAbstractWindowClient
@@ -35,4 +37,6 @@ private:
 	CSpotlight m_lamp;
 	CStayAliveProgramContext m_programContext;
 	Labyrinth m_labyrinth;
+	CPlayer m_player;
+	CKey m_key;
 };

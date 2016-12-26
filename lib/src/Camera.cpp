@@ -161,7 +161,6 @@ glm::mat4 CCamera::GetViewTransform() const
 		m_posZ - cosf(m_angleX / 180.f * (float)M_PI) };
 
 	const glm::vec3 eye = {m_posX, m_height, m_posZ};
-    //const glm::vec3 center = {0, 0, 0};
     const glm::vec3 up = {0, 1, 0};
 
     // Матрица моделирования-вида вычисляется функцией glm::lookAt.

@@ -42,6 +42,6 @@ private:
 
 	CTexture2DUniquePtr m_pGroundTexture;
 	CTexture2DUniquePtr m_pWallTexture;
-	CTexture2DUniquePtr m_pCeilingTexture;
+	CTexture2DUniquePtr m_pGoldTexture;
 	CShaderProgram m_programStayAlive;
 };

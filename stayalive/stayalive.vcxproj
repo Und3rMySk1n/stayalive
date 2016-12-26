@@ -159,6 +159,7 @@
     <ClInclude Include="LabyrinthReader.h" />
     <ClInclude Include="LabyrinthRenderer3D.h" />
     <ClInclude Include="MeshP3NT2.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="SolidBlock.h" />
     <ClInclude Include="StayAliveProgramContext.h" />
     <ClInclude Include="stdafx.h" />
@@ -177,6 +178,7 @@
     <ClCompile Include="LabyrinthRenderer3D.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MeshP3NT2.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="SolidBlock.cpp" />
     <ClCompile Include="StayAliveProgramContext.cpp" />
     <ClCompile Include="stdafx.cpp">

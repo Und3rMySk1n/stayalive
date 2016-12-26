@@ -105,12 +105,6 @@ void Labyrinth::AddWalls(BlockArrayType blocksArray)
 	m_wallsMesh.Copy(wallTesselator);
 }
 
-void Labyrinth::AddKey(glm::vec2 position)
-{
-	std::unique_ptr<CKey> key(new CKey(position));
-	m_objects.push_back(std::move(key));
-}
-
 glm::vec2 Labyrinth::GetObjectPosition(BlockArrayType blocksArray, int objectId)
 {
 	glm::vec2 playerPosition;

@@ -138,7 +138,7 @@ void CSpotlight::Setup() const
 
 GLfloat CSpotlight::GetSpotCutoff()
 {
-	return float(cos(m_spotCutoff * 3.1415f / 180.0f));
+	return m_spotCutoff;
 }
 
 glm::vec3 CSpotlight::GetSpotDirection()
