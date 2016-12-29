@@ -84,35 +84,6 @@ void SolidBlock::Draw(IRenderer3D &renderer) const
 	m_mesh.Draw(renderer);
 }
 
-glm::vec2 SolidBlock::GetCorrectedPoint(glm::vec2 point, glm::vec2 newPoint, float offset, bool &moveBlocked)
-{
-	glm::vec2 resultPoint;
-	if ((point.x > (m_topLeft.x - offset) && point.x < (m_topRight.x + offset)))
-	{
-		resultPoint.x = newPoint.x;
-		resultPoint.y = point.y;
-		moveBlocked = false;
-	}
-	else if ((point.y > (m_topLeft.y - offset) && point.y < (m_bottomLeft.y + offset)))
-	{
-		resultPoint.x = point.x;
-		resultPoint.y = newPoint.y;
-		moveBlocked = false;
-	}
-	else
-	{
-		resultPoint.x = newPoint.x;
-		resultPoint.y = newPoint.y;
-		moveBlocked = true;
-
-		std::cout << "X: " << m_topLeft.x - offset << " - " << m_bottomRight.x + offset << std::endl;
-		std::cout << "Y: " << m_topLeft.y - offset << " - " << m_bottomRight.y + offset << std::endl;
-	}
-
-	return resultPoint;
-}
-
-
 SolidBlock::~SolidBlock()
 {
 }

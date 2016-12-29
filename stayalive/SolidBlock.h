@@ -8,7 +8,6 @@ public:
 
 	void Draw(IRenderer3D &renderer) const;
 	bool IsPointInBlock(glm::vec2 point, float offset);
-	glm::vec2 GetCorrectedPoint(glm::vec2 point, glm::vec2 newPoint, float offset, bool &moveBlocked);
 
 	~SolidBlock();
 private:
