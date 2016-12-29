@@ -35,7 +35,6 @@ void main()
     vec4 color = texture2D(colormap, fragTextureUV.st);
     vec4 lightPosInViewSpace = view * light0.position;
 
-
     // start calculating spotlight effect
     
     float attenuation = 1.0;

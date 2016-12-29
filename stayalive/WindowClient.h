@@ -8,6 +8,7 @@
 #include "SolidBlock.h"
 #include "Player.h"
 #include "Key.h"
+#include "LabyrinthReader.h"
 
 class CWindowClient
         : public CAbstractWindowClient
@@ -36,6 +37,7 @@ private:
     CCamera m_camera;
 	CSpotlight m_lamp;
 	CStayAliveProgramContext m_programContext;
+	std::unique_ptr<CLabyrinthReader> m_labirynthReader;
 	Labyrinth m_labyrinth;
 	CPlayer m_player;
 	CKey m_key;

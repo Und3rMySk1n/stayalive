@@ -191,11 +191,6 @@ void Labyrinth::Draw(IRenderer3D &renderer) const
 	{
 		(*it)->Draw(renderer);
 	}
-
-	for (auto it = m_objects.begin(); it != m_objects.end(); it++)
-	{
-		(*it)->Draw(renderer);
-	}
 }
 
 Labyrinth::~Labyrinth()

@@ -13,7 +13,6 @@ public:
 
 	void Draw(IRenderer3D &renderer) const;
 	void AddWalls(BlockArrayType wallPointsArray);
-	bool PlayerPickUpKey(glm::vec2 point);
 	glm::vec2 GetObjectPosition(BlockArrayType wallPointsArray, int objectId);
 	glm::vec2 CorrectActorMovement(glm::vec2 point, glm::vec2 newPoint, float offset);
 
@@ -31,6 +30,5 @@ private:
 	CMeshP3NT2 m_wallsMesh;
 
 	std::vector<std::unique_ptr<SolidBlock>> m_blocks;
-	std::vector<std::unique_ptr<CLabyrinthObject>> m_objects;	
 };
 

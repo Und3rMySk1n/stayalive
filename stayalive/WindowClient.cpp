@@ -21,9 +21,7 @@ const unsigned LABYRINTH_LENGTH = 10;
 const float LABYRINTH_HEIGHT = 3.f;
 const float WALL_OFFSET = 0.2f;
 
-CLabyrinthReader *labirynthReader = new CLabyrinthReader("res/map.tmx");
-const unsigned labyrinthWidth = labirynthReader->GetWidth();
-const unsigned labyrinthLength = labirynthReader->GetLength();
+// TODO: Remove global variable or even move reader to CLabyrinth
 
 void SetupOpenGLState()
 {
@@ -39,8 +37,9 @@ CWindowClient::CWindowClient(CWindow &window)
 	: CAbstractWindowClient(window)
 	, m_defaultVAO(CArrayObject::do_bind_tag())
 	, m_camera(CAMERA_INITIAL_ROTATION, CAMERA_INITIAL_DISTANCE)
+	, m_labirynthReader(new CLabyrinthReader("res/map.tmx"))
 	, m_lamp(GL_LIGHT0)
-	, m_labyrinth(labyrinthWidth, labyrinthLength, LABYRINTH_HEIGHT, TILE_SIZE)
+	, m_labyrinth(m_labirynthReader->GetWidth(), m_labirynthReader->GetLength(), LABYRINTH_HEIGHT, TILE_SIZE)
 {
     const glm::vec3 SUNLIGHT_DIRECTION = {1.f, 1.f, 1.f};
 	const glm::vec4 WHITE_RGBA = { 1, 1, 1, 1 };
@@ -50,10 +49,9 @@ CWindowClient::CWindowClient(CWindow &window)
     window.SetBackgroundColor(BLACK_RGBA);
     SetupOpenGLState();	
 		
-	std::vector<std::vector<int>> blocksArray = labirynthReader->GetBlocks(labyrinthWidth, labyrinthLength);
-	delete labirynthReader;
-
+	std::vector<std::vector<int>> blocksArray = m_labirynthReader->GetBlocks(m_labirynthReader->GetWidth(), m_labirynthReader->GetLength());
 	m_labyrinth.AddWalls(blocksArray);
+	m_labirynthReader.reset();	
 
 	glm::vec2 keyPosition = m_labyrinth.GetObjectPosition(blocksArray, KEY_ID);
 	m_key.SetPosition(keyPosition);
@@ -73,6 +71,7 @@ CWindowClient::CWindowClient(CWindow &window)
 void CWindowClient::OnUpdateWindow(float deltaSeconds)
 {
     //UpdateRotation(deltaSeconds);
+	// TODO: make player actor separate from camera
 	glm::vec2 pos = m_camera.GetPositionOnMap();
 	glm::vec2 newPos = m_camera.GetNewPositionOnMap();
 	glm::vec2 resultPos = m_labyrinth.CorrectActorMovement(pos, newPos, WALL_OFFSET);
