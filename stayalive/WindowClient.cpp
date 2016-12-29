@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "WindowClient.h"
 #include "LabyrinthRenderer3D.h"
-#include "LabyrinthReader.h"
 
 using glm::mat4;
 using glm::vec3;
@@ -20,8 +19,6 @@ const unsigned LABYRINTH_WIDTH = 6;
 const unsigned LABYRINTH_LENGTH = 10;
 const float LABYRINTH_HEIGHT = 3.f;
 const float WALL_OFFSET = 0.2f;
-
-// TODO: Remove global variable or even move reader to CLabyrinth
 
 void SetupOpenGLState()
 {
